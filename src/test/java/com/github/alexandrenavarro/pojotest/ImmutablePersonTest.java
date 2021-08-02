@@ -2,12 +2,13 @@ package com.github.alexandrenavarro.pojotest;
 
 import org.junit.jupiter.api.Test;
 
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class PersonTest extends AbstractPojoTest<Person, Person.PersonBuilder> {
+class ImmutablePersonTest extends AbstractPojoTest<ImmutablePerson, ImmutablePerson.ImmutablePersonBuilder> {
 
     @Override
-    public Person getFakeInstance() {
+    public ImmutablePerson getFakeInstance() {
         return getBuilder()
                 .firstname("firstname")
                 .middlename("middlename")
@@ -16,13 +17,13 @@ class PersonTest extends AbstractPojoTest<Person, Person.PersonBuilder> {
     }
 
     @Override
-    public Person.PersonBuilder getBuilder() {
-        return Person.builder();
+    public ImmutablePerson.ImmutablePersonBuilder getBuilder() {
+        return ImmutablePerson.builder();
     }
 
     @Test
-    public void shouldCreateWithMinimalFields() {
-        final Person person = Person.builder()
+    void shouldCreateWithMinimalFields() {
+        final ImmutablePerson person = ImmutablePerson.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .build();

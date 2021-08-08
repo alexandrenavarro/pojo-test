@@ -1,10 +1,7 @@
 package com.github.alexandrenavarro.pojotest;
 
-
-import jdk.jfr.StackTrace;
-import lombok.*;
-
 import java.util.Optional;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +11,7 @@ import java.util.Optional;
 @ToString
 @Builder
 public final class MutablePerson {
-    private String firstname;
-    private String lastname;
-    private Optional<String> middlename;
+  private String firstname;
+  private String lastname;
+  private Optional<String> middlename;
 }

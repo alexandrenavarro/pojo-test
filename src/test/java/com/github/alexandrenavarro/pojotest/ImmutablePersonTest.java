@@ -1,33 +1,37 @@
 package com.github.alexandrenavarro.pojotest;
 
-import org.junit.jupiter.api.Test;
-
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class ImmutablePersonTest extends AbstractPojoTest<ImmutablePerson, ImmutablePerson.ImmutablePersonBuilder> {
+import org.junit.jupiter.api.Test;
 
-    @Override
-    public ImmutablePerson getFakeInstance() {
-        return getBuilder()
-                .firstname("firstname")
-                .middlename("middlename")
-                .lastname("lastname")
-                .build();
-    }
+class ImmutablePersonTest
+    extends AbstractPojoTest<ImmutablePerson, ImmutablePerson.ImmutablePersonBuilder> {
 
-    @Override
-    public ImmutablePerson.ImmutablePersonBuilder getBuilder() {
-        return ImmutablePerson.builder();
-    }
+  @Override
+  public ImmutablePerson getFakeInstance() {
+    return getBuilder()
+        .firstname("firstname")
+        .middlename("middlename")
+        .lastname("lastnamelastnamelastnamelastnamelastnamelastnamelastnamelastname")
+        .build();
+    // return ImmutablePerson.builder()
+    // .firstname("firstname")
+    // .middlename("middlename")
+    // .lastname(
+    //
+    // "lastnamelastnamelastnamelastnamelastlastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamenamelastname")
+    // .build();
+  }
 
-    @Test
-    void shouldCreateWithMinimalFields() {
-        final ImmutablePerson person = ImmutablePerson.builder()
-                .firstname("firstname")
-                .lastname("lastname")
-                .build();
-        assertThat(person.getMiddlename()).isNotPresent();
-    }
+  @Override
+  public ImmutablePerson.ImmutablePersonBuilder getBuilder() {
+    return ImmutablePerson.builder();
+  }
 
+  @Test
+  void shouldCreateWithMinimalFields() {
+    final ImmutablePerson person =
+        ImmutablePerson.builder().firstname("firstname").lastname("lastname").build();
+    assertThat(person.getMiddlename()).isNotPresent();
+  }
 }

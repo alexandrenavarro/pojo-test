@@ -7,16 +7,31 @@
   <artifactId>pojo-test</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
-    <java.version>16</java.version>
-    <equalsverifier.version>3.7</equalsverifier.version>
-    <junit-jupiter.version>5.7.2</junit-jupiter.version>
-    <lombok.version>1.18.20</lombok.version>
+    <!-- general properties-->
+    <java.version>17</java.version>
+    <maven.version>3.8.1</maven.version>
+
+    <!-- plugins versions -->
+    <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+    <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+    <restrict-imports-enforcer-rule.version>1.2.0</restrict-imports-enforcer-rule.version>
+    <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-    <assertj-core.version>3.19.0</assertj-core.version>
-    <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
-    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-    <meanbean.version>3.0.0-M9</meanbean.version>
+    <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+    <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
     <spotless-maven-plugin.version>2.12.2</spotless-maven-plugin.version>
+    <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
+    <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+    <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+
+    <!-- dependency versions-->
+    <lombok.version>1.18.20</lombok.version>
+    <junit-jupiter.version>5.8.0-M1</junit-jupiter.version>
+    <assertj-core.version>3.20.2</assertj-core.version>
+    <equalsverifier.version>3.7</equalsverifier.version>
+    <meanbean.version>3.0.0-M9</meanbean.version>
+
   </properties>
   <dependencies>
     <dependency>
@@ -53,12 +68,91 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${maven-clean-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>de.skuzzle.enforcer</groupId>
+            <artifactId>restrict-imports-enforcer-rule</artifactId>
+            <version>${restrict-imports-enforcer-rule.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>execution-id</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <rules>
+            <requireJavaVersion>
+              <message>You need at least java ${java.version}.
+              </message>
+              <version>[${java.version},)</version>
+            </requireJavaVersion>
+            <requireMavenVersion>
+              <message>You need at least maven ${maven.version}.
+              </message>
+              <version>[${maven.version},)</version>
+            </requireMavenVersion>
+            <banDuplicatePomDependencyVersions/>
+            <dependencyConvergence/>
+            <requirePluginVersions/>
+            <restrictImports implementation="de.skuzzle.enforcer.restrictimports.rule.RestrictImports">
+              <groups>
+                <group>
+                  <reason>Accept only to use some lombok annotation</reason>
+                  <bannedImports>
+                    <bannedImport>lombok.**</bannedImport>
+                  </bannedImports>
+                  <allowedImports>
+                    <!-- Keep this order of annotation when multiple are used (generally in the same order if you have to write the code manually)-->
+                    <allowedImport>lombok.extern.slf4j.Slf4j</allowedImport>
+                    <!-- Annotation like to swagger/documentation (not linked directly)-->
+                    <allowedImport>lombok.AccessLevel</allowedImport>
+                    <allowedImport>lombok.NoArgsConstructor</allowedImport>
+                    <allowedImport>lombok.RequiredArgsConstructor</allowedImport>
+                    <allowedImport>lombok.AllArgsConstructor</allowedImport>
+                    <allowedImport>lombok.Getter</allowedImport>
+                    <allowedImport>lombok.Setter</allowedImport>
+                    <allowedImport>lombok.experimental.Accessors</allowedImport>
+                    <allowedImport>lombok.EqualsAndHashCode</allowedImport>
+                    <allowedImport>lombok.ToString</allowedImport>
+                    <allowedImport>lombok.Builder</allowedImport>
+                    <allowedImport>lombok.extern.jackson.Jacksonized</allowedImport>
+                  </allowedImports>
+                </group>
+              </groups>
+            </restrictImports>
+          </rules>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${maven-resources-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -203,8 +297,8 @@
               </order>
             </importOrder>
             <removeUnusedImports/>
-            <trimTrailingWhitespace /> <!-- trim trailing whitespaces -->
-            <endWithNewline /> <!-- files must end with a newline -->
+            <trimTrailingWhitespace/> <!-- trim trailing whitespaces -->
+            <endWithNewline/> <!-- files must end with a newline -->
             <!--                        <googleJavaFormat />-->
             <!-- config taken from https://github.com/google/styleguide with
              <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/> for builder
@@ -225,6 +319,21 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>${maven-install-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${maven-deploy-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${maven-site-plugin.version}</version>
       </plugin>
     </plugins>
   </build>

@@ -2,7 +2,11 @@ package com.github.alexandrenavarro.pojotest;
 
 import java.util.Optional;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
 
 @Getter
 @EqualsAndHashCode

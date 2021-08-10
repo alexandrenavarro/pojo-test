@@ -7,9 +7,12 @@
   <artifactId>pojo-test</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
+
     <!-- general properties-->
     <java.version>17</java.version>
     <maven.version>3.8.1</maven.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- plugins versions -->
     <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
@@ -29,6 +32,7 @@
     <lombok.version>1.18.20</lombok.version>
     <junit-jupiter.version>5.8.0-M1</junit-jupiter.version>
     <assertj-core.version>3.20.2</assertj-core.version>
+    <mockito-core.version>3.9.0</mockito-core.version>
     <equalsverifier.version>3.7</equalsverifier.version>
     <meanbean.version>3.0.0-M9</meanbean.version>
 
@@ -50,6 +54,12 @@
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>${assertj-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito-core.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>

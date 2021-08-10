@@ -5,15 +5,15 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
 
 class ImmutablePersonTest
-    extends AbstractPojoTest<ImmutablePerson, ImmutablePerson.ImmutablePersonBuilder> {
+  extends AbstractPojoTest<ImmutablePerson, ImmutablePerson.ImmutablePersonBuilder> {
 
   @Override
   public ImmutablePerson getFakeInstance() {
     return getBuilder()
-        .firstname("firstname")
-        .middlename("middlename")
-        .lastname("lastnamelastnamelastnamelastnamelastnamelastnamelastnamelastname")
-        .build();
+      .firstname("firstname")
+      .middlename("middlename")
+      .lastname("lastnamelastnamelastnamelastnamelastnamelastnamelastnamelastname")
+      .build();
     // return ImmutablePerson.builder()
     // .firstname("firstname")
     // .middlename("middlename")
@@ -31,7 +31,7 @@ class ImmutablePersonTest
   @Test
   void shouldCreateWithMinimalFields() {
     final ImmutablePerson person =
-        ImmutablePerson.builder().firstname("firstname").lastname("lastname").build();
+      ImmutablePerson.builder().firstname("firstname").lastname("lastname").build();
     assertThat(person.getMiddlename()).isNotPresent();
   }
 }

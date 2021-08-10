@@ -1,19 +1,21 @@
 package com.github.alexandrenavarro.pojotest;
 
 import java.util.Optional;
-import nl.jqno.equalsverifier.EqualsVerifier;
+
 import org.junit.jupiter.api.Test;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 class MutablePersonTest
-    extends AbstractPojoTest<MutablePerson, MutablePerson.MutablePersonBuilder> {
+  extends AbstractPojoTest<MutablePerson, MutablePerson.MutablePersonBuilder> {
 
   @Override
   public MutablePerson getFakeInstance() {
     return getBuilder()
-        .firstname("firstname")
-        .lastname("lastname")
-        .middlename(Optional.of("middlename"))
-        .build();
+      .firstname("firstname")
+      .lastname("lastname")
+      .middlename(Optional.of("middlename"))
+      .build();
   }
 
   @Override

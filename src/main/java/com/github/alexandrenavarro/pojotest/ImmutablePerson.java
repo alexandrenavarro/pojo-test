@@ -1,12 +1,14 @@
 package com.github.alexandrenavarro.pojotest;
 
 import java.util.Optional;
+
 import lombok.*;
 
 @Getter
 @EqualsAndHashCode
 @ToString
 public final class ImmutablePerson {
+
   private final String firstname;
   private final String lastname;
   private final Optional<String> middlename;

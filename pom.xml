@@ -1,265 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.alexandrenavarro.pojo-test</groupId>
-    <artifactId>pojo-test</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <properties>
-        <equalsverifier.version>3.7</equalsverifier.version>
-        <junit-jupiter.version>5.7.2</junit-jupiter.version>
-        <lombok.version>1.18.20</lombok.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <assertj-core.version>3.19.0</assertj-core.version>
-        <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-    </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit-jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>nl.jqno.equalsverifier</groupId>
-            <artifactId>equalsverifier</artifactId>
-            <version>${equalsverifier.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.meanbeanlib</groupId>
-            <artifactId>meanbean</artifactId>
-            <version>3.0.0-M9</version>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*_.*</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pre-unit-tests</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution
-                              data. -->
-                            <destFile>${jacoco.utReportFile}</destFile>
-                        </configuration>
-                    </execution>
-                    <!-- Ensures that the code coverage report for unit tests is
-                      created after unit tests have been run -->
-                    <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${jacoco.utReportFile}</dataFile>
-                            <outputDirectory>${jacoco.reportFolder}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>pre-integration-tests</id>
-                        <goals>
-                            <goal>prepare-agent-integration</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution
-                              data. -->
-                            <destFile>${jacoco.itReportFile}</destFile>
-                        </configuration>
-                    </execution>
-                    <!-- Ensures that the code coverage report for integration tests
-                      is created after integration tests have been run -->
-                    <execution>
-                        <id>post-integration-tests</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report-integration</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${jacoco.itReportFile}</dataFile>
-                            <outputDirectory>${jacoco.reportFolder}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>merge</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>merge</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <fileSet
-                                        implementation="org.apache.maven.shared.model.fileset.FileSet">
-                                    <directory>${project.basedir}</directory>
-                                    <includes>
-                                        <include>**/*.exec</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                            <destFile>${jacoco.reportFile}</destFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>post-merge-report</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${jacoco.reportFile}</dataFile>
-                            <outputDirectory>${jacoco.reportFolder}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jacoco-check</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>CLASS</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>1.00</minimum>
-                                        </limit>
-                                        <limit>
-                                            <counter>BRANCH</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>1.00</minimum>
-                                        </limit>
-                                        <limit>
-                                            <counter>CLASS</counter>
-                                            <value>MISSEDCOUNT</value>
-                                            <maximum>0</maximum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                            <dataFile>${jacoco.reportFile}</dataFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.12.2</version>
-                <configuration>
-                    <java>
-                        <toggleOffOn />
-                        <includes>
-                            <include>src/main/java/**/*.java</include>
-                            <include>src/test/java/**/*.java</include>
-                        </includes>
-<!--                        <importOrder> -->
-<!--                            <order>java,javax,org,com,com.diffplug,-->
-<!--                            </order>-->
-<!--                        </importOrder>-->
-<!--                        <removeUnusedImports/>-->
-<!--                        <googleJavaFormat />-->
-                      <!-- config taken from https://github.com/google/styleguide with
-                       <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/> for builder
-                       <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="140"/>
-                       <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="140"/>
-                       <setting id="org.eclipse.jdt.core.formatter.alignment_for_enum_constants" value="17"/> for enum value on one line each
-                       -->
-                      <eclipse>
-                        <file>${basedir}/src/main/config/eclipse-java-google-style-140.xml</file>
-                      </eclipse>
-                    </java>
-                </configuration>
-            </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>com.theoryinpractise</groupId>-->
-            <!--                <artifactId>googleformatter-maven-plugin</artifactId>-->
-            <!--                <version>1.7.3</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>reformat-sources</id>-->
-            <!--                        <configuration>-->
-            <!--                            <includeStale>false</includeStale>-->
-            <!--                            <style>GOOGLE</style>-->
-            <!--                            <formatMain>true</formatMain>-->
-            <!--                            <formatTest>true</formatTest>-->
-            <!--                            <filterModified>false</filterModified>-->
-            <!--                            <skip>false</skip>-->
-            <!--                            <fixImports>false</fixImports>-->
-            <!--                            <maxLineLength>200</maxLineLength>-->
-            <!--                        </configuration>-->
-            <!--                        <goals>-->
-            <!--                            <goal>format</goal>-->
-            <!--                        </goals>-->
-            <!--                        <phase>process-sources</phase>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-
-            <!--            <plugin>-->
-            <!--                <groupId>org.ec4j.maven</groupId>-->
-            <!--                <artifactId>editorconfig-maven-plugin</artifactId>-->
-            <!--                <version>0.0.11</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>check</id>-->
-            <!--                        <phase>verify</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>check</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--                <configuration>-->
-            <!--                    <includes>-->
-            <!--                      <include>src/main/java/**/*.java</include>-->
-            <!--                        <include>src/test/java/**/*.java</include>-->
-            <!--                    </includes>-->
-            <!--                    <encoding>utf-8</encoding>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
-        </plugins>
-    </build>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.alexandrenavarro.pojo-test</groupId>
+  <artifactId>pojo-test</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <properties>
+    <java.version>16</java.version>
+    <equalsverifier.version>3.7</equalsverifier.version>
+    <junit-jupiter.version>5.7.2</junit-jupiter.version>
+    <lombok.version>1.18.20</lombok.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <assertj-core.version>3.19.0</assertj-core.version>
+    <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    <meanbean.version>3.0.0-M9</meanbean.version>
+    <spotless-maven-plugin.version>2.12.2</spotless-maven-plugin.version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit-jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>nl.jqno.equalsverifier</groupId>
+      <artifactId>equalsverifier</artifactId>
+      <version>${equalsverifier.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.meanbeanlib</groupId>
+      <artifactId>meanbean</artifactId>
+      <version>${meanbean.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco-maven-plugin.version}</version>
+        <configuration>
+          <excludes>
+            <exclude>**/*_.*</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>pre-unit-tests</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution
+                data. -->
+              <destFile>${jacoco.utReportFile}</destFile>
+            </configuration>
+          </execution>
+          <!-- Ensures that the code coverage report for unit tests is
+            created after unit tests have been run -->
+          <execution>
+            <id>post-unit-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${jacoco.utReportFile}</dataFile>
+              <outputDirectory>${jacoco.reportFolder}</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>pre-integration-tests</id>
+            <goals>
+              <goal>prepare-agent-integration</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution
+                data. -->
+              <destFile>${jacoco.itReportFile}</destFile>
+            </configuration>
+          </execution>
+          <!-- Ensures that the code coverage report for integration tests
+            is created after integration tests have been run -->
+          <execution>
+            <id>post-integration-tests</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>report-integration</goal>
+            </goals>
+            <configuration>
+              <dataFile>${jacoco.itReportFile}</dataFile>
+              <outputDirectory>${jacoco.reportFolder}</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>merge</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+            <configuration>
+              <fileSets>
+                <fileSet
+                    implementation="org.apache.maven.shared.model.fileset.FileSet">
+                  <directory>${project.basedir}</directory>
+                  <includes>
+                    <include>**/*.exec</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+              <destFile>${jacoco.reportFile}</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-merge-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${jacoco.reportFile}</dataFile>
+              <outputDirectory>${jacoco.reportFolder}</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jacoco-check</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>CLASS</element>
+                  <limits>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>1.00</minimum>
+                    </limit>
+                    <limit>
+                      <counter>BRANCH</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>1.00</minimum>
+                    </limit>
+                    <limit>
+                      <counter>CLASS</counter>
+                      <value>MISSEDCOUNT</value>
+                      <maximum>0</maximum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+              <dataFile>${jacoco.reportFile}</dataFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless-maven-plugin.version}</version>
+        <configuration>
+          <java>
+            <toggleOffOn/>
+            <includes>
+              <include>src/main/java/**/*.java</include>
+              <include>src/test/java/**/*.java</include>
+            </includes>
+            <importOrder>
+              <order>java,javax,org,com,com.diffplug,
+              </order>
+            </importOrder>
+            <removeUnusedImports/>
+            <trimTrailingWhitespace /> <!-- trim trailing whitespaces -->
+            <endWithNewline /> <!-- files must end with a newline -->
+            <!--                        <googleJavaFormat />-->
+            <!-- config taken from https://github.com/google/styleguide with
+             <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/> for builder
+             <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="140"/>
+             <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="140"/>
+             <setting id="org.eclipse.jdt.core.formatter.alignment_for_enum_constants" value="17"/> for enum value on one line each
+             -->
+            <eclipse>
+              <file>${basedir}/src/main/config/eclipse-java-google-style-140.xml</file>
+            </eclipse>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
 
